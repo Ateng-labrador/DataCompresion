@@ -64,5 +64,3 @@ g = [
 x = subtracted(g)
 dc = dct2d(x) 
 print(dc)
-
-
