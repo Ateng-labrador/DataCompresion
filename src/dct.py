@@ -1,7 +1,6 @@
 import cmath
 import math
 
-
 def dct1(x):
     res = [0] * len(x)
     for k in range(len(x)):
