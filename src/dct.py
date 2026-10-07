@@ -1,5 +1,6 @@
 import cmath
 import math
+import numpy as np
 
 def dct1(x):
     res = [0] * len(x)
@@ -18,6 +19,8 @@ def dct2(x):
         for n in range(len(x)):
             res[k] += 2 * x[n] * math.cos(cmath.pi * k * (2 * n+1) / (2 * len(x)))
     return res
+
+
 
 def dct2d(g):
     H = len(g)
@@ -43,10 +46,10 @@ def subtracted(x):
     for i in range(len(x)):
         row = []
         for j in range(len(x[0])):
-            P_new = x[i][j] - 128
+            P_new = x[i][j] - 128.0
             row.append(P_new)
         res.append(row)
-    return res
+    return np.array(res)
             
 
 g = [
@@ -60,6 +63,6 @@ g = [
     [87, 79, 69, 68, 65, 76, 78, 94],
 ]
 
-x = subtracted(g)
-dc = dct2d(x) 
-print(dc)
+# x = subtracted(g)
+# dc = dct2d(x) 
+# print(dc)

@@ -20,6 +20,9 @@ def build_huffman_tree(text)    :
         tercatat sebelumnya
         - Nilai tersebut ditambah 1, lalu disimpan kembali ke freq[i]
     """
+    if not text:
+        return None, {}
+
     freq = {}
     for i in text:
         freq[i] = freq.get(i, 0) + 1
@@ -41,7 +44,7 @@ def build_huffman_tree(text)    :
 
     huffman_codes = {}
     def generate_codes(node, current_code=""):
-        if node is Node:
+        if node is None:
             return
         if node.char is not None:
             huffman_codes[node.char] = current_code
@@ -72,13 +75,13 @@ def decode(encoded_text, root):
     return "".join(decoded_text)
 
 
-text = "KHANSA"
-root, codes = build_huffman_tree(text)
+# text = "KHANSA"
+# root, codes = build_huffman_tree(text)
 
-encoded = encode(text, codes)
-decoded = decode(encoded, root)
+# encoded = encode(text, codes)
+# decoded = decode(encoded, root)
 
-print(f"\nTeks Asli     : {text}")
-print(f"Hasil Enkoding : {encoded}")
-print(f"Hasil Dekoding : {decoded}")
+# print(f"\nTeks Asli     : {text}")
+# print(f"Hasil Enkoding : {encoded}")
+# print(f"Hasil Dekoding : {decoded}")
 
