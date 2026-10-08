@@ -11,7 +11,7 @@ class Node:
     def __lt__(self, other):
         return self.freq < other.freq
 
-def build_huffman_tree(text)    :
+def build_huffman_tree(text):
     # cout freq char
     """
     freq.get(i, 0) + 1: Memeriksa apakah karakter i sudah ada di dalam dictionary
@@ -47,7 +47,7 @@ def build_huffman_tree(text)    :
         if node is None:
             return
         if node.char is not None:
-            huffman_codes[node.char] = current_code
+            huffman_codes[node.char] = current_code or "0"
             return
         generate_codes(node.left, current_code + "0")
         generate_codes(node.right, current_code + "1")
@@ -62,7 +62,10 @@ def encode(text, huffman_codes):
 # Proses mengubah code hasil biner menjadi teks asli
 def decode(encoded_text, root):
     if not root:
-        return ""
+        return []
+
+    if root.char is not None:
+        return [root.char for _ in encoded_text]
 
     decoded_text = []
     current = root
@@ -72,7 +75,7 @@ def decode(encoded_text, root):
         if current.char is not None: # Daun ditemukan
             decoded_text.append(current.char)
             current = root
-    return "".join(decoded_text)
+    return decoded_text
 
 
 # text = "KHANSA"
@@ -84,4 +87,3 @@ def decode(encoded_text, root):
 # print(f"\nTeks Asli     : {text}")
 # print(f"Hasil Enkoding : {encoded}")
 # print(f"Hasil Dekoding : {decoded}")
-
