@@ -78,12 +78,40 @@ def decode(encoded_text, root):
     return decoded_text
 
 
-# text = "KHANSA"
-# root, codes = build_huffman_tree(text)
+def huffman_code_array(text):
+    if not text:
+        return {}
 
-# encoded = encode(text, codes)
-# decoded = decode(encoded, root)
+    # For Count Probabily fo codeword
+    freq = {}
+    for i in text:
+        freq[i] = freq.get(i, 0) + 1
 
-# print(f"\nTeks Asli     : {text}")
-# print(f"Hasil Enkoding : {encoded}")
-# print(f"Hasil Dekoding : {decoded}")
+    # Mengembalikan angka satu jika panjang frequensi cuman satu
+    if len(freq) == 1:
+        return {list(freq.keys())[0]:"0"}
+
+    # melakaukan iterasi huruf frequnnsi
+    def get_freq(c):
+        return freq[c]
+
+    # mengurutkan symbols
+    symbols = sorted(freq.keys(), key=get_freq)
+    n = len(symbols)
+
+    # ambil jumlah frequnsinya
+    A = [freq[s] for s in symbols]
+
+    leaf_ptr = 0
+    rigt_ptr = 0
+
+    for i in range(n, 2 * n - 1):
+        if leaf_ptr < n and 
+
+
+
+    
+
+x = "khansa"
+huffman_code_array(x)
+

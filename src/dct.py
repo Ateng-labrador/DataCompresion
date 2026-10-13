@@ -109,27 +109,3 @@ g = [
     [85.0, 71.0, 64.0, 59.0, 55.0, 61.0, 65.0, 83.0],
     [87.0, 79.0, 69.0, 68.0, 65.0, 76.0, 78.0, 94.0],
 ]
-
-# x = subtracted(g)
-
-# x = [1, 2, 3, 4, 5, 6, 7, 8]
-
-# dc = dct1(x) 
-# dci = idct1(dc)
-
-# dc2 = dct2(x)
-# dci2 = idct2(dc2)
-
-# print(x)
-# print(dci)
-
-
-# print(x)
-# print(dci2)
-
-dc2d = dct2d(g)
-tidc2d = idct2d(dc2d)
-
-print(g)
-print('\n')
-print(tidc2d)
