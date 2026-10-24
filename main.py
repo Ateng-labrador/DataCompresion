@@ -1,81 +1,39 @@
-from src import dct, huffmancode, matrix_pip
 import numpy as np
+from src import shiffted, dct_new, huffmancode, quantization, zigzag_scan, code
 import cv2
-import matplotlib.pyplot as plt
+import src.quantization
 
 
-img = cv2.imread('sampel.jpg', cv2.IMREAD_GRAYSCALE)
-h, w = img.shape
+image = cv2.imread('sampel.jpg', cv2.IMREAD_GRAYSCALE)
 
-img_shifted = dct.subtracted(img)
+def encode(img):
+    h, w = img.shape
 
-simbol = []
-
-
-# Encoding Process
-for i in range(0, h - h % 8, 8):
-    for j in range(0, w - w % 8, 8):
-        block = img_shifted[i:i+8, j:j+8]
-
-        # Step 1: 2D - DCT
-        dct_block = dct.dct2d(block)
-
-        # Step 2: Kuantisasi
-        quantized_block = np.round(dct_block / matrix_pip.Q_MATRIX).astype(int)
-
-        # Step 3: Pemindaian Zig - Zag
-        vector_1d = [quantized_block[r, c] for r, c in matrix_pip.ZIGZAG_INDICES]
-
-        simbol.extend(vector_1d)
-
-root, codebook = huffmancode.build_huffman_tree(simbol)
-bitstream = huffmancode.encode(simbol, codebook)
-
-# ukuran_asli_bits = h * w * 8
-# ukuran_terkompresi_bits = len(bitstream)
-
-# print(f"Ukuran Asli Gambar    : {ukuran_asli_bits} bits")
-# print(f"Ukuran Terkompresi     : {ukuran_terkompresi_bits} bits")
-# print(f"Rasio Kompresi         : {ukuran_asli_bits / ukuran_terkompresi_bits:.2f}x")
-        
-
-# Decoding Process
-
-def rekonstruksi_gambar(bitstream, root, shape_gambar):
-    h, w = shape_gambar
-
-    simbol_terkode = huffmancode.decode(bitstream, root)
-    img_recpnstructe = np.zeros((h, w), dtype=float)
-    idx = 0
+    result_img = []
     for i in range(0, h - h % 8, 8):
         for j in range(0, w - w % 8, 8):
-            block_vector = simbol_terkode[idx : idx + 64]
-            idx += 64
+            # potong block 8 x 8
+            block_8x8 = img[i:i+8, j:j+8]
+            # shifted
+            shifted_block = shiffted.left_shifted(block_8x8)
+            # 2d-DCT 
+            dct_block = dct_new.dct_II(shifted_block)
+            # kuantisasi
+            quantized_block = quantization.quantization(dct_block)
+            # Zig-zag scanning (Matriks 8 x 8)
+            vector_1d = zigzag_scan.zigzag_scan(quantized_block)
+            # kumpulkan ke list utama
+            result_img.extend(vector_1d)
+    codes = huffmancode.huffman_code_array1(result_img)
+    bitstream = code.encode(result_img, codes)
+    return bitstream, codes, (h, w)
 
-            quantized_block = np.zeros((8, 8), dtype=int)
-            for k, (r, c) in enumerate(matrix_pip.ZIGZAG_INDICES):
-                quantized_block[r, c] = block_vector[k]
 
-            dct_block = quantized_block * matrix_pip.Q_MATRIX
+def decode(bitstream, codes, shape):
+    pass
 
-            spatial_block = dct.idct2d(dct_block)
+x, y , z= encode(image)
+print(z)
+    
 
-            img_recpnstructe[i:i+8, j:j+8] = np.asarray(spatial_block) + 128.0
-    img_recpnstructe = np.clip(img_recpnstructe, 0, 255).astype(np.uint8)
-    return img_recpnstructe
 
-img_hasil = rekonstruksi_gambar(bitstream, root, (h, w))
-
-plt.figure(figsize=(10, 5))
-
-plt.subplot(1, 2, 1)
-plt.title("Gambar Asli")
-plt.imshow(img, cmap='gray')
-plt.axis('off')
-
-plt.subplot(1, 2, 2)
-plt.title("Hasil Rekonstruksi (Post-Encoding & Decoding)")
-plt.imshow(img_hasil, cmap='gray')
-plt.axis('off')
-
-plt.show()

@@ -58,7 +58,6 @@ def build_huffman_tree(text):
 def encode(text, huffman_codes):
     return "".join(huffman_codes[char] for char in text)
 
-
 # Proses mengubah code hasil biner menjadi teks asli
 def decode(encoded_text, root):
     if not root:
@@ -76,7 +75,6 @@ def decode(encoded_text, root):
             decoded_text.append(current.char)
             current = root
     return decoded_text
-
 
 def huffman_code_array(text):
     if not text:
@@ -128,6 +126,8 @@ def huffman_code_array(text):
         A[i] = w1 + w2
     A[2 * n - 2] = 0
 
+
+    # Tahap 3
     lengths = []
     for i in range(n):
         dept = 0
@@ -157,18 +157,6 @@ def huffman_code_array(text):
     return codes
 
 def huffman_code_array1(text):
-    """
-    1. Tahap pertama
-        - menghitung jumlah frekuensi pada setiap kata yang tersimpan
-        - melakukan pengurutan berdasarkan jumlah frekuensi (frekuesnsi kecil ke besar)
-        - 
-    
-    2. Tahap Kedua
-        
-    
-    
-    """
-
     # Tahap 1
     freq = {}
     for item in text:
@@ -183,7 +171,7 @@ def huffman_code_array1(text):
     # mengambil jumlah frequnsi pada dictionary
     A = [freq[s] for s in symbols] + [0] * n
 
-
+    
     # Tahap 2
     leaf_ptr = 0
     root_ptr = 0
@@ -209,13 +197,37 @@ def huffman_code_array1(text):
             root_ptr += 1
         A[i] = w1 + w2
     A[2 * n - 2] = 0
-    return A
-        
-# next menggunakna Min-Heap (Priority Queue) berbasis Array
-x = "khansa"
-print(huffman_code_array1(x))
 
 
+    # Tahap 3
+    lengths = []
+    for i in range(n):
+        dept = 0
+        curr = i
+        while curr != 2 * n - 2:
+            curr = A[curr]
+            dept += 1
+        lengths.append(dept)
+    
+    def get_key(x):
+        return x[1], x[0]
+    
+    symbols_lengths = list(zip(symbols, lengths))
+    symbols_lengths.sort(key = get_key)
+    
+    codes = {}
+    current_code = 0
+    previous_length = 0
+    
+    for sym, length in symbols_lengths:
+        if length > previous_length:
+            current_code <<= (length - previous_length)
+            previous_length = length
+    
+        codes[sym] = format(current_code, f'0{length}b')
+        current_code += 1
+    return codes
 
-
-
+# # next menggunakna Min-Heap (Priority Queue) berbasis Array
+# x = "khansa"
+# print(huffman_code_array1(x))
