@@ -31,14 +31,14 @@ def dct_II(x):
 
 def idct_II(X):
     C = np.zeros((len(X), len(X)))
-    for n in range(len(X)):
-        if n == 0:
+    for k in range(len(X)):
+        if k == 0:
             beta = 1/np.sqrt(2)
         else:
             beta = 1
-        for k in range(len(X)):
-            angle = (np.pi*n*(2*n+1))/(2*len(X))
-            C[n, k] = np.sqrt(2/len(X)) * beta * np.cos(angle)
-    return C @ X @ C.T
+        for n in range(len(X)):
+            angle = (np.pi*k*(2*n+1))/(2*len(X))
+            C[k, n] = np.sqrt(2/len(X)) * beta * np.cos(angle)
+    return C.T @ X @ C
 
 
