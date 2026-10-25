@@ -56,11 +56,6 @@ def decode(bitstream, codes, shape):
             reconstructed_img[i:i+8, j:j+8] = block_8x8
     return np.clip(reconstructed_img, 0 , 255).astype(np.uint8)
 
-
-# bitstream, codes, size = encode(img=image)
-# img_reconstructed = decode(bitstream=bitstream, codes=codes, shape=size)
-# cv2.imwrite('hasil_rekonstrksi.jpeg', img_reconstructed)
-
 image = cv2.imread('sampel.jpg')
 
 img_ycrcb = cv2.cvtColor(image, cv2.COLOR_BGR2YCrCb)

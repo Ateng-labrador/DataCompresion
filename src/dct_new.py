@@ -1,9 +1,11 @@
 import math
 import numpy as np
-# 2D AXA^T
 
 
 def dct_I(x):
+    """
+    
+    """
     res = [0] * len(x)
     for k in range(len(x)):
         for n in range(len(x[0])):
@@ -17,6 +19,9 @@ def dct_I(x):
 
 
 def dct_II(x):
+    """
+    
+    """
     C = np.zeros((len(x), len(x)))
     for k in range(len(x)):
         if k == 0:
@@ -30,6 +35,9 @@ def dct_II(x):
     
 
 def idct_II(X):
+    """
+    
+    """
     C = np.zeros((len(X), len(X)))
     for k in range(len(X)):
         if k == 0:
@@ -40,5 +48,3 @@ def idct_II(X):
             angle = (np.pi*k*(2*n+1))/(2*len(X))
             C[k, n] = np.sqrt(2/len(X)) * beta * np.cos(angle)
     return C.T @ X @ C
-
-
