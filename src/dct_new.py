@@ -48,3 +48,32 @@ def idct_II(X):
             angle = (np.pi*k*(2*n+1))/(2*len(X))
             C[k, n] = np.sqrt(2/len(X)) * beta * np.cos(angle)
     return C.T @ X @ C
+
+
+def mdct(x):
+    """
+    
+    """
+    res = []
+    for k in range(len(x)//2):
+        op = 0
+        for n in range(len(x)):
+            angle = ((2*math.pi / len(x)) * (k + 0.5) * (n + 0.5 + len(x)/4))
+            op += x[n] * math.cos(angle)
+        res.append(op)
+    return res
+            
+
+def imdct(X):
+    """
+    
+    """
+    res = []
+    for k in range(len(X) * 2):
+        op = 0
+        for n in range(len(X)):
+            angle = ((2*math.pi / len(X)) * (k + 0.5) * (n + 0.5 + len(X)/4))
+            op += 2/len(X) * X[n] * math.cos(angle)
+        res.append(op)
+    return res
+
