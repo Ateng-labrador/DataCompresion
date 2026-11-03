@@ -5,6 +5,23 @@ from scipy.signal import find_peaks
 import matplotlib.pyplot as plt
 import numpy as np
 
+def SineWindow(x):
+    res = []
+    for i in range(len(x)):
+        row = x[i] * math.sin(math.pi*(i + 0.5)/len(x))
+        res.append(row)
+    return res
+
+def process_full_audio(x, N=1024, M=512):
+    window_frames = []
+
+    for start in range(0, len(x) - N + 1, M):
+        frame = x[start:start + N]
+
+        window_frame = SineWindow(frame)
+
+        window_frames.append(window_frame)
+    return window_frames
 
 def dft(x):
     res = []
@@ -15,6 +32,7 @@ def dft(x):
             row += x[n] * cmath.exp(angle)
         res.append(row)
     return res
+
 
 def dct_II(x):
     res = []
@@ -45,6 +63,10 @@ samplerate, data = wavfile.read("nada_1.wav")
 data_potong = data[120000:150000]
 data_bersih = data_potong[0:512]
 
+
+data_new = process_full_audio(data_potong, N=512, M=256)
+
+
 N_1 = 512
 N_2 = 256
 N_3 = 512
@@ -54,54 +76,25 @@ freq_2 = np.arange(N_2) * fs / N_2
 freq_3 = np.arange(N_3) * fs / N_3
 
 
-data_dft = dft(data_bersih)
-data_mdct = mdct(data_bersih)
-data_dct = dct_II(data_bersih)
+data_dft = [dft(i) for i in data_new]
+data_mdct = [mdct(i) for i in data_new]
+data_dct = [dct_II(i) for i in data_new]
 
 
-magnitude_1 = 2 * np.abs(data_dft) / N_1
-magnitude_2 = 2 * np.abs(data_mdct) / N_2
-magnitude_3 = 2 * np.abs(data_dct) / N_3
+# magnitude_1 = 2 * np.abs(data_dft) / N_1
+# magnitude_2 = 2 * np.abs(data_mdct) / N_2
+# magnitude_3 = 2 * np.abs(data_dct) / N_3
 
-peaks_1, _ = find_peaks(magnitude_1, height=1000)
-peaks_2, _ = find_peaks(magnitude_2, height=10000)
-peaks_3, _ = find_peaks(magnitude_2, height=10000)
+# peaks_1, _ = find_peaks(magnitude_1, height=1000)
+# peaks_2, _ = find_peaks(magnitude_2, height=10000)
+# peaks_3, _ = find_peaks(magnitude_2, height=10000)
 
 
 fig, axis = plt.subplots(2, 2)
-axis[0, 0].plot(freq_1, magnitude_1)
-axis[0, 0].scatter(freq_1[peaks_1], magnitude_1[peaks_1], color='red')
-for p in peaks_1:
-    axis[0, 0].annotate(
-        f"{freq_1[p]:.2f}",
-        xy=(freq_1[p], magnitude_1[p]),
-        xytext=(0, 8),
-        textcoords="offset points",
-        ha="center"
-    )
+axis[0, 0].plot(data_dft)
+axis[0, 1].plot(data_mdct)
+axis[1, 0].plot(data_dct)
 
-
-axis[0, 1].plot(freq_2, magnitude_2)
-axis[0, 1].scatter(freq_2[peaks_2], magnitude_1[peaks_2], color='red')
-for p in peaks_2:
-    axis[0, 1].annotate(
-        f"{freq_2[p]:.2f}",
-        xy=(freq_2[p], magnitude_2[p]),
-        xytext=(0, 8),
-        textcoords="offset points",
-        ha="center"
-    )
-
-axis[1, 0].plot(freq_3, magnitude_3)
-axis[1, 0].plot(freq_3[peaks_3], magnitude_3[peaks_3], color='red')
-for p in peaks_3:
-    axis[1, 0].annotate(
-        f"{freq_3[p]:.2f}",
-        xy=(freq_3[p], magnitude_3[p]),
-        xytext=(0, 8),
-        textcoords="offset points",
-        ha="center"
-    )
 
 plt.tight_layout()
 plt.show()

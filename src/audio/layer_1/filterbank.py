@@ -2,6 +2,8 @@ import math
 import cmath
 
 
+# Filter bank
+
 def dft(x):
     N = len(x)
     res = []
@@ -14,24 +16,24 @@ def dft(x):
     return res
 
 
-
-
 def Z_transform(x, z):
     x_z = 0.0 + 0.0j
     for n in range(len(x)):
         x_z += x[n] * (z ** (-n))
     return x_z
 
+# encoderr
+def down_sampling(x, K):
+    return x[::K]
 
-def down_sampling(x):
-    res = []
-    for n in range(len(x)):
-        row = 0.0
-        for k in range(len(x)):
-            con = -1j * 2 * math.pi * k / len(x)
-            row += 1/len(x)
-
-
-def up_sampling(x):
-    pass
+# decoder
+def up_sampling(X_freq, K):
+    Y_freq = []
+    for f in range(len(X_freq)//K):
+        sum_terms = 0.0 + 0.0j
+        for r in range(K):
+            idx = (f + r * (len(X_freq)//K)) % len(X_freq)
+            sum_terms += X_freq[idx]
+        Y_freq.append(sum_terms/K)
+    return Y_freq
 
