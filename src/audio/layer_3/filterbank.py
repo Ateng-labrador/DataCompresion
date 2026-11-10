@@ -5,6 +5,9 @@ import cmath
 # Filter bank
 
 def dft(x):
+    """
+    
+    """
     N = len(x)
     res = []
     for f in range(len(x)):
@@ -17,6 +20,9 @@ def dft(x):
 
 
 def Z_transform(x, z):
+    """
+    
+    """
     x_z = 0.0 + 0.0j
     for n in range(len(x)):
         x_z += x[n] * (z ** (-n))
@@ -24,10 +30,16 @@ def Z_transform(x, z):
 
 # encoderr
 def down_sampling(x, K):
+    """
+    
+    """
     return x[::K]
 
 # decoder
 def up_sampling(X_freq, K):
+    """
+    
+    """
     Y_freq = []
     for f in range(len(X_freq)//K):
         sum_terms = 0.0 + 0.0j
@@ -36,4 +48,3 @@ def up_sampling(X_freq, K):
             sum_terms += X_freq[idx]
         Y_freq.append(sum_terms/K)
     return Y_freq
-
